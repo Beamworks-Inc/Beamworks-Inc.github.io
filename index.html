@@ -476,7 +476,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="_사용자_계정_확인"><a class="link" href="#_사용자_계정_확인">사용자 계정 확인</a></h3>
 <div class="paragraph">
-<p>이메일과 패스워드를 기반으로 사용자 계정이 올바른지 확인할 수 있습니다.</p>
+<p>이메일과 패스워드를 기반으로 사용자 계정이 올바른지 확인할 수 있습니다.
+올바르지 않은 로그인 정보인 경우 에러 메시지가 함께 전달됩니다.</p>
 </div>
 <div class="sect3">
 <h4 id="_http_request"><a class="link" href="#_http_request">HTTP request</a></h4>
@@ -687,20 +688,27 @@ Content-Type: text/plain;charset=UTF-8</code></pre>
 <div class="paragraph">
 <p>이메일과 패스워드를 기반으로 새로운 사용자 계정을 변경할 수 있습니다.
 존재하지 않는 사용자 계정을 변경하는 경우 에러가 발생합니다.
-:identifier: updateUserAuth
-==== HTTP request</p>
+잘못된 로그인 정보를 입력하면 에러가 발생합니다.</p>
 </div>
+<div class="sect3">
+<h4 id="_http_request_4"><a class="link" href="#_http_request_4">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/authenticate HTTP/1.1
+<pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/authenticate HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: text/plain
-Content-Length: 70
+Content-Length: 186
 Host: api.beamworks.co.kr:80
 
 {
-  "user_email" : "user_email",
-  "user_password" : "user_password"
+  "original" : {
+    "user_email" : "user_email",
+    "user_password" : "user_password"
+  },
+  "target" : {
+    "user_email" : "user_email",
+    "user_password" : "user_password"
+  }
 }</code></pre>
 </div>
 </div>
@@ -719,17 +727,28 @@ Host: api.beamworks.co.kr:80
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>user_email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>original.user_email</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이메일</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>user_password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>original.user_password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">사용자 패스워드</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>target.user_email</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">대체할 이메일</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>target.user_password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">대체할 패스워드</p></td>
+</tr>
 </tbody>
 </table>
+</div>
 <div class="sect3">
 <h4 id="_http_response_4"><a class="link" href="#_http_response_4">HTTP response</a></h4>
 <div class="listingblock">
@@ -745,6 +764,10 @@ Content-Type: text/plain;charset=UTF-8</code></pre>
 <div class="sect1">
 <h2 id="_로그정보_관리"><a class="link" href="#_로그정보_관리">로그정보 관리</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>로그 정보를 관리하기위해서는 관리자 정보를 입력해야 합니다.
+각 요청에 관리자 정보를 잘못 입력할 경우 권한 에러가 발생합니다.</p>
+</div>
 <div class="sect2">
 <h3 id="_로그_정보_생성_api"><a class="link" href="#_로그_정보_생성_api">로그 정보 생성 API</a></h3>
 <div class="paragraph">
@@ -752,7 +775,7 @@ Content-Type: text/plain;charset=UTF-8</code></pre>
 생성하려고 하는 경우 400 에러가 발생합니다.</p>
 </div>
 <div class="sect3">
-<h4 id="_http_request_4"><a class="link" href="#_http_request_4">HTTP request</a></h4>
+<h4 id="_http_request_5"><a class="link" href="#_http_request_5">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/log/info HTTP/1.1
@@ -839,7 +862,7 @@ Content-Type: text/plain;charset=UTF-8</code></pre>
 만약 name이 존재하지 않다면 400 에러를 발생시킵니다.</p>
 </div>
 <div class="sect3">
-<h4 id="_http_request_5"><a class="link" href="#_http_request_5">HTTP request</a></h4>
+<h4 id="_http_request_6"><a class="link" href="#_http_request_6">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">PUT /api/v1/log/info HTTP/1.1
@@ -926,7 +949,7 @@ Content-Type: text/plain;charset=UTF-8</code></pre>
 만약 name이 존재하지 않다면 400 에러를 발생시킵니다.</p>
 </div>
 <div class="sect3">
-<h4 id="_http_request_6"><a class="link" href="#_http_request_6">HTTP request</a></h4>
+<h4 id="_http_request_7"><a class="link" href="#_http_request_7">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">GET /api/v1/log/info HTTP/1.1
@@ -1001,7 +1024,7 @@ Content-Length: 92
 만약 name이 존재하지 않다면 400 에러를 발생시킵니다.</p>
 </div>
 <div class="sect3">
-<h4 id="_http_request_7"><a class="link" href="#_http_request_7">HTTP request</a></h4>
+<h4 id="_http_request_8"><a class="link" href="#_http_request_8">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">DELETE /api/v1/log/info HTTP/1.1
@@ -1073,13 +1096,13 @@ Content-Type: text/plain;charset=UTF-8</code></pre>
 만약 name이 존재하지 않다면 400 에러를 발생시킵니다.</p>
 </div>
 <div class="sect3">
-<h4 id="_http_request_8"><a class="link" href="#_http_request_8">HTTP request</a></h4>
+<h4 id="_http_request_9"><a class="link" href="#_http_request_9">HTTP request</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight nowrap"><code class="language-http" data-lang="http">POST /api/v1/log HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Accept: text/plain
-Content-Length: 256
+Content-Length: 257
 Host: api.beamworks.co.kr:80
 
 {
@@ -1092,7 +1115,7 @@ Host: api.beamworks.co.kr:80
     "message" : {
       "sampleKey" : "sampleValue"
     },
-    "date" : "2022-11-02T11:31:44.40698",
+    "date" : "2022-11-02T14:10:59.828033",
     "id" : "sampleID"
   } ]
 }</code></pre>
@@ -1171,7 +1194,7 @@ Content-Type: text/plain;charset=UTF-8</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-11-02 11:30:28 +0900
+Last updated 2022-11-02 14:10:28 +0900
 </div>
 </div>
 </body>
